@@ -1,0 +1,16 @@
+Package: diagrams
+Type: Package
+Title: Assists with the Creation of Diagrams within Rmd Files
+Version: 0.0.1
+Authors@R: person("Malcolm", "Haddon", email = "malcolm.haddon@gmail.com", role = c("aut", "cre"))
+Maintainer: Malcolm Haddon <malcolm.haddon@gmail.com>
+Description: Provides a few functions to simplify the generation of diagrams, such as flowcharts
+    for inclusion in Rmd files.
+Depends: R (>= 3.5.0)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
