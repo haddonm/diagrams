@@ -135,6 +135,7 @@ getangle <- function(x){
 #' @param xinc left + xinc defines right-hand edge or rectangle
 #' @param top defines top edge of rectangle
 #' @param yinc top - yincdefines bottom edge of rectangle
+#' @param linecol colour of line. default="grey"
 #'
 #' @return a vector denoting the center (x,y) of the rectangle
 #' @export
@@ -144,8 +145,9 @@ getangle <- function(x){
 #'    canvas(ystart=50,yfinish=93.5)
 #'    makerect(left=2,xinc=27,top=90,yinc=6)
 #' }
-makerect <- function(left,xinc,top,yinc) {
-  polygon(makevx(left,xinc),makevy(top,yinc),col=0,lwd=1,border=1)
+makerect <- function(left,xinc,top,yinc,linecol="grey") {
+  polygon(makevx(left,xinc),makevy(top,yinc),col=0,
+          lwd=1,border=linecol)
   centerx <- (left * 2 + xinc)/2
   centery <- (top * 2 - yinc)/2
   return(invisible(c(centerx,centery)))
@@ -182,7 +184,7 @@ pol2cart <- function(angle,dist,xorig=0,yorig=0){
   return(coord) #output the new x and y coordinates
 } # end of pol2cart
 
-#' @title pythag calculates Pythagorus' theroum on a vector of two values
+#' @title pythag calculates Pythagorus' theorum on a vector of two values
 #' 
 #' @description pythag Pythagorus' theorum states that the length of the
 #'     hypotheneuse between two lines at right angels to each other (that
