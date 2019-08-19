@@ -136,6 +136,7 @@ getangle <- function(x){
 #' @param top defines top edge of rectangle
 #' @param yinc top - yincdefines bottom edge of rectangle
 #' @param linecol colour of line. default="grey"
+#' @param lwd the width of the line, default=1
 #'
 #' @return a vector denoting the center (x,y) of the rectangle
 #' @export
@@ -145,12 +146,37 @@ getangle <- function(x){
 #'    canvas(ystart=50,yfinish=93.5)
 #'    makerect(left=2,xinc=27,top=90,yinc=6)
 #' }
-makerect <- function(left,xinc,top,yinc,linecol="grey") {
+makerect <- function(left,xinc,top,yinc,linecol="grey",lwd=1) {
   polygon(makevx(left,xinc),makevy(top,yinc),col=0,
-          lwd=1,border=linecol)
+          lwd=lwd,border=linecol)
   centerx <- (left * 2 + xinc)/2
   centery <- (top * 2 - yinc)/2
   return(invisible(c(centerx,centery)))
+}
+
+#' @title plotoblong generates an oblong from x0,x1,y0,y1
+#' 
+#' @description plotoblong generates an oblong from x0,x1,y0,y1
+#'
+#' @param x0 x-axis left
+#' @param x1 x-axis right
+#' @param y0 yaxis bottom
+#' @param y1 yaxis top
+#' @param border colour of the border, default=black=1
+#' @param col colour of fill, default = 0 =  empty
+#' @param lwd width of the line,default=1
+#'
+#' @return nothing but it plots a polygon
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   canvas()
+#'   plotoblong(1,50,1,50,lwd=3,linecol=4)
+#' }
+plotoblong <- function(x0,x1,y0,y1,border=1,col=0,lwd=1) {
+  x <- c(x0,x0,x1,x1,x0); y <- c(y0,y1,y1,y0,y0)
+  polygon(x,y,lwd=lwd,border=border,col=col)
 }
 
 #' @title pol2cart polar to cartesian coordinates

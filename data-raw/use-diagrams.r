@@ -200,158 +200,6 @@ plotprep(height=5)
 canvas()
 
 
-glidergun <- function(N=50) {
-  # A Godper's glider gun
-  if (N < 50) N = 50
-  x <- matrix(0,nrow=N,ncol=N,dimnames=list(1:N,1:N))
-  x[2:3,94:95] <- 1
-  x[36:37,96:97] <- 1
-  x[22:23,95:97] <- 1
-  x[c(24,26),c(94,98)] <- 1
-  x[c(26,26),c(93,99)] <- 1
-  x[c(12,12,12),c(93:95)] <- 1  
-  x[c(13,13),c(92,96)] <- 1
-  x[c(14,14),c(91,97)] <- 1
-  x[c(15,15),c(91,97)] <- 1
-  x[c(16,19),c(94,94)] <- 1
-  x[c(17,17),c(92,96)] <- 1
-  x[c(18,18,18),c(93:95)] <- 1
-  return(x)
-} # end of glider gun
-
-#  
-fourblink <- function(N=21) {
-  x <- matrix(0,nrow=N,ncol=N,dimnames=list(1:N,1:N))
-  x[rep(11,6),c(6,7,8,14,15,16)] <- 1
-  x[c(6,7,8,14,15,16),rep(11,6)] <- 1
-  return(x)
-}
-
-pentadec <- function(N=18) {
-  x <- matrix(0,nrow=N,ncol=N,dimnames=list(1:N,1:N))
-  x[c(8,9,10),c(4,4,4)] <- 1
-  x[c(7,11),c(5,5)] <- 1
-  x[c(7,11),c(6,6)] <- 1  
-  x[c(8,9,10),c(7,7,7)] <- 1
-  x[c(8,9,10),c(12,12,12)] <- 1
-  x[c(7,11),c(13,13)] <- 1
-  x[c(7,11),c(14,14)] <- 1  
-  x[c(8,9,10),c(15,15,15)] <- 1
-  return(x)
-}
-
-symmetric <- function(N=5) {
-  # develops for about 180 steps until stability
-  x <- matrix(0,nrow=N,ncol=N)
-  x[c(1,2,4,5),c(4,4,4,4)] <- 1
-  x[c(1,5),c(3,3)] <- 1
-  x[c(2,3,4),c(2,2,2)] <- 1
-  return(x)
-}
-
-random <- function(N=10) {
-  dat <- rbinom((N * N),1,0.5)
-  frame <- matrix(dat,nrow=N,ncol=N)
-  return(frame)
-}
-
-makeblock <- function(N=21,
-                      pattern=matrix(1,nrow=6,ncol=6)) {
-  frame <- matrix(0,nrow=N,ncol=N)
-  dim1 <- nrow(pattern)
-  left <- trunc(N/2) - trunc(dim1/2)
-  frame[left:(left+dim1-1),left:(left+dim1-1)] <- pattern
-  return(frame)
-}
-
-
-canvasN <- function(N=100,pts=TRUE) {
-  par(mfrow=c(1,1),mai=c(0.1,0.1,0.1,0.1),oma=c(0.0,0,0.0,0.0))
-  par(cex=0.85, mgp=c(1.35,0.35,0), font.axis=7,font=7,font.lab=7)
-  plot(seq(0,N,length=101),seq(0,N,length=101),
-       type="n",xaxt="n",yaxt="n",xlab="",ylab="", bty="n")
-  makerect(1,N,N,(N))
-  if (pts) for (i in 1:100) points(c(2:101),rep(i,100),pch=16,cex=0.2)
-}
-
-
-
-plotstep <- function(N,frame,col=1,cex=1.0,sleep=0.2) {
-  for (i in N:1) {
-   xs <- which(frame[i,] > 0)
-   npts <- length(xs)
-   if (npts > 0) points(rep(i,npts),xs,pch=16,
-                        cex=cex,col=col)
-  }
-  Sys.sleep(sleep)
-} # end of plotstep
-
-
-plotcount <- function(cnt) {
-  N <- countgtzero(cnt)
-  plotprep(width=6,height=4)
-  plot1(1:N,cnt[1:N],xlabel="trial","Population Size")
-}
-
-
-dostep <- function(xj,yi,frame) {
-  ans <- 0  # assume answer is the cell dies
-  view <- sum(frame[(xj-1):(xj+1),(yi+1):(yi-1)]) - frame[xj,yi]
-  if (view > 0) {
-    if (((frame[xj,yi] == 1) & ((view == 2) | (view == 3))) |
-        ((frame[xj,yi] == 0) & (view == 3))) ans <- 1
-  }
-  return(ans)
-}
-
-dostep2 <- function(xj,yi,frame) {
-  ans <- 0  # assume answer is the cell dies
-  view <- sum(frame[(xj-1):(xj+1),(yi+1):(yi-1)]) - frame[xj,yi]
-  if (view > 0) {
-    if (((frame[xj,yi] == 1) & ((view == 2) | (view == 3))) |
-        ((frame[xj,yi] == 0) & (view == 3))) {
-      ans <- 1
-    } else {
-      if ((frame[(xj-1),(yi-1)] == 1) & (runif(1) > 0.999))  ans <- 1
-      if ((frame[(xj+1),(yi+1)] == 0) & (runif(1) > 0.999))  ans <- 1
-    }
-  }
-  return(ans)
-}
-
-dolife <- function(N,frame, infun) {
-  step <- frame
-  nm1 <- N - 1
-  for (i in nm1:2) { # y axis
-    for (j in 2:nm1) { # x axis
-      step[j,i] <- infun(j,i,frame)
-    }
-  }
-  return(step)
-}
-
-placematrix <- function(frame,mat) {
-  nmat <- nrow(mat)
-  nframe <- nrow(frame)
-  if (nmat > nframe)
-    stop("input object too big for arena  \n")
-  halfframe <- trunc(nframe/2)
-  halfmat <- trunc(nmat/2)
-  leftbot <- halfframe - halfmat
-  frame[leftbot:(leftbot+nmat-1),
-        leftbot:(leftbot+nmat-1)] <- mat
-  return(frame)
-}
-
-reorder <- function(seed) {
-  seed <- as.character(seed)
-  num <- nchar(seed)
-  pick <- sample(1:num)
-  ans <- NULL
-  for (i in 1:num) ans <- paste0(ans,substr(seed,pick[i],pick[i]))
-  return(as.numeric(ans))  
-}
-
 
 #  useglidergun --------------------------------------
 num <- 100
@@ -361,7 +209,7 @@ arena <- glidergun(N=num)
 canvas()
 plotstep(num,arena)
 for (iter in 1:300) {
-  arena <- dolife(num, arena)
+  arena <- dolife(num, arena, dostep)
  # plotprep(height=5,newdev=FALSE)
   canvas()
   plotstep(num,arena,cex=1.5,sleep=0.1)
@@ -371,11 +219,11 @@ for (iter in 1:300) {
 num <- 21
 pat=matrix(1,nrow=7,ncol=7)
 arena <- makeblock(N=num,pattern=pat)
-canvasN(23)
+canvasN(101)
 plotstep(num,arena,cex=2.0)
 
-for (iter in 1:20) {
-  arena <- dolife(num, arena)
+for (iter in 1:20) { # iter=1
+  arena <- dolife(num, arena, dostep)
   canvasN(25)
   plotstep(num,arena,cex=2.0,sleep=0.2)
 } 
@@ -386,21 +234,21 @@ for (iter in 1:20) {
 
 begin <- gettime()
 seed <- MQMF::getseed()
-seed <- reorder(seed)
+seed <- mixuprand(seed)
 set.seed(seed)
-tmp <- random(17)
+tmp <- random(21)
 num <- 100
 arena <- matrix(0,nrow=num,ncol=num)
 arena <- placematrix(arena,tmp)
 canvasN(101)
-plotstep(num,arena,cex=2.0)
+plotstep(num,arena,cex=1.0)
 
 count <- numeric(2000)
 count[1] <- sum(arena)
 for (iter in 2:2000) {
   arena <- dolife(num, arena, dostep2)
   canvasN(101)
-  plotstep(num,arena,cex=2.0,sleep=0.05)
+  plotstep(num,arena,cex=1.0,sleep=0.04)
   xc <- sum(arena)
   count[iter] <- xc
   if (xc == 0) break
@@ -437,7 +285,7 @@ ansname <- numeric(numtrial)
 for (trial in 1:numtrial) { # trial=1
   begin <- gettime()
   seed <- MQMF::getseed()
-  seed <- reorder(seed)
+  seed <- mixuprand(seed)
   set.seed(seed)
   ansname[trial] <- seed
   tmp <- random(10)
@@ -582,14 +430,27 @@ geto(45,90)
 
 
 
+makearena <- function(N=100) {
+  x <- matrix(0,nrow=N,ncol=N,dimnames=list(1:N,1:N))
+  return(x)
+}
 
+  set.seed(56173) # pick any random seed
+  num <- 100
+  arena <- canvasN(num)
+  mat <- symmetric(5)
+  arena <- placematrix(arena,mat)
+  plotstep(arena,cex=1.0)
+  iter <- 200
+  count <- numeric(iter)
+  for (i in 1:iter) {
+    arena <- dolife(num, arena, dostep)
+    canvasN(num)
+    plotstep(arena,cex=1.0,sleep=0.05)
+    count[i] <- sum(arena)
+  }
 
-
-
-
-
-
-
+  plotcount(count)
 
 
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/diagrams.r
 \name{pythag}
 \alias{pythag}
-\title{pythag calculates Pythagorus' theroum on a vector of two values}
+\title{pythag calculates Pythagorus' theorum on a vector of two values}
 \usage{
 pythag(x)
 }

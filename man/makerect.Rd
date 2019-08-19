@@ -4,7 +4,7 @@
 \alias{makerect}
 \title{makerect draws a rectangle once a plot is available}
 \usage{
-makerect(left, xinc, top, yinc)
+makerect(left, xinc, top, yinc, linecol = "grey")
 }
 \arguments{
 \item{left}{defines lefthand edge of rectangle}
@@ -14,6 +14,8 @@ makerect(left, xinc, top, yinc)
 \item{top}{defines top edge of rectangle}
 
 \item{yinc}{top - yincdefines bottom edge of rectangle}
+
+\item{linecol}{colour of line. default="grey"}
 }
 \value{
 a vector denoting the center (x,y) of the rectangle
