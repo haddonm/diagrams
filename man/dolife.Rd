@@ -11,7 +11,7 @@ dolife(N, frame, infun = dostep)
 
 \item{frame}{the arena matrix}
 
-\item{infun}{the function definning the automatic rules default
+\item{infun}{the function defining the automatic rules default
 = dostep}
 }
 \value{

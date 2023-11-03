@@ -1,16 +1,21 @@
 Package: diagrams
 Type: Package
-Title: Assists with the Creation of Diagrams within Rmd Files
-Version: 0.0.1
-Authors@R: person("Malcolm", "Haddon", email = "malcolm.haddon@gmail.com", role = c("aut", "cre"))
+Title: Functions for drawing sketch diagrams, also to run Game of Life in R
+Version: 0.0.2
+Authors@R: person(given="Malcolm",
+                  family="Haddon", 
+                  email = "malcolm.haddon@gmail.com", 
+                  role = c("aut", "cre"),
+                  comment=c(ORCID="0000-0001-6971-7585"))
 Maintainer: Malcolm Haddon <malcolm.haddon@gmail.com>
-Description: Provides a few functions to simplify the generation of diagrams, such as flowcharts
-    for inclusion in Rmd files.
+Description: Has functions for drawing sketch diagrams, perhaps for inclusion in
+    Rmd documents. It also holds an R version of the Game of Life.
 Depends: R (>= 3.5.0)
 License: GPL-3
+Imports: codeutils
 Encoding: UTF-8
 LazyData: true
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3

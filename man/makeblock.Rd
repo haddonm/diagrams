@@ -2,7 +2,7 @@
 % Please edit documentation in R/gameoflife.R
 \name{makeblock}
 \alias{makeblock}
-\title{Title}
+\title{makeblock creates a solid matrix of points}
 \usage{
 makeblock(r = 6, c = 6)
 }
@@ -15,7 +15,7 @@ makeblock(r = 6, c = 6)
 a matrix of shape r x c
 }
 \description{
-Title
+makeblock creates a solid matrix of points
 }
 \examples{
 \dontrun{ 
