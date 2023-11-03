@@ -4,10 +4,14 @@
 \alias{plotstep}
 \title{plotstep plots the arena with the current state of the GoL}
 \usage{
-plotstep(frame, col = 1, cex = 1, sleep = 0.2)
+plotstep(frame, prevframe, col = 1, cex = 1, sleep = 0.2)
 }
 \arguments{
 \item{frame}{the arena at a given time step or generation}
+
+\item{prevframe}{the arena in the previous timestep. If is.null
+then nothing will happen, otherwise this is printed first 
+to overwrite the previous points in white.}
 
 \item{col}{the colour of the points, default=1=black}
 
@@ -17,7 +21,7 @@ plotstep(frame, col = 1, cex = 1, sleep = 0.2)
 remain visible}
 }
 \value{
-nothing but it does plot the arena for a given generation
+the input frame to be placed into the following prevframe
 }
 \description{
 plotstep plots a single generation within the GoL. It
@@ -30,13 +34,12 @@ plotstep plots a single generation within the GoL. It
   arena <- canvasN(num)
   mat <- pentadec()
   arena <- placematrix(arena,mat)
-  plotstep(num,arena,cex=1.0)
+  prevstep <- plotstep(num,arena,prevframe=NULL,cex=1.0)
   iter <- 100
   count <- numeric(iter)
   for (i in 1:iter) {
     arena <- dolife(num, arena, dostep)
-    canvasN(num)
-    plotstep(num,arena,cex=1.0,sleep=0.05)
+    prevstep <- plotstep(num,arena,prevstep,cex=1.0,sleep=0.05)
     count[i] <- sum(arena)
   }
 }

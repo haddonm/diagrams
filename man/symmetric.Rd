@@ -4,7 +4,7 @@
 \alias{symmetric}
 \title{symmetric is a 5x5 matrix that generates a symmetric output}
 \usage{
-symmetric()
+symmetric(N = 5)
 }
 \value{
 a 5 x 5 matrix of points for use in GoL

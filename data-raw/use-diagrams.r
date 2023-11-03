@@ -1,5 +1,5 @@
 
-library(rutilsMH)
+library(codeutils)
 library(diagrams)
 
 plotprep(height=5)
@@ -193,13 +193,12 @@ points(1:12,y,pch=16,col=2)
 round(cbind(x,y),5)
 
 # Game of Life -------------------------------------------
-library(rutilsMH)
+library(codeutils)
+library(hplot)
 library(diagrams)
 
-plotprep(height=5)
+plotprep(height=10,width=10)
 canvas()
-
-
 
 #  useglidergun --------------------------------------
 num <- 100
@@ -207,48 +206,45 @@ arena <- glidergun(N=num)
 
 #plotprep(height=5,newdev=FALSE)
 canvas()
-plotstep(num,arena)
+prevstep <- plotstep(arena,prevframe=NULL)
 for (iter in 1:300) {
   arena <- dolife(num, arena, dostep)
- # plotprep(height=5,newdev=FALSE)
-  canvas()
-  plotstep(num,arena,cex=1.5,sleep=0.1)
+  prevstep <- plotstep(arena,prevstep,cex=1.5,sleep=0.1)
 }
 
 # solid block -------------------------------------
-num <- 21
-pat=matrix(1,nrow=7,ncol=7)
-arena <- makeblock(N=num,pattern=pat)
-canvasN(101)
-plotstep(num,arena,cex=2.0)
-
-for (iter in 1:20) { # iter=1
-  arena <- dolife(num, arena, dostep)
-  canvasN(25)
-  plotstep(num,arena,cex=2.0,sleep=0.2)
+tmp <- makeblock(17,11)
+arena <- canvasN(101,pts=FALSE)
+arena <- placematrix(arena,tmp)
+plotprep(height=10,width=10)
+canvas()
+prevstep <- plotstep(arena,prevframe=NULL,col=1,cex=1.0)
+for (iter in 1:200) { # iter=1
+  arena <- dolife(N=100, arena, dostep)
+ # canvasN(101,pts=FALSE)
+  prevstep <- plotstep(arena,prevstep,col=1,cex=1.0,sleep=0.5)
 } 
 
 
 # random block ------------------------------------
 
 
-begin <- gettime()
+#begin <- gettime()
 seed <- MQMF::getseed()
-seed <- mixuprand(seed)
+#seed <- mixuprand(seed)
 set.seed(seed)
-tmp <- random(21)
+tmp <- random(11)
 num <- 100
 arena <- matrix(0,nrow=num,ncol=num)
 arena <- placematrix(arena,tmp)
-canvasN(101)
-plotstep(num,arena,cex=1.0)
-
+plotprep(height=10,width=10)
+canvas()
+prevstep <- plotstep(arena,prevframe=NULL,cex=1.0)
 count <- numeric(2000)
 count[1] <- sum(arena)
 for (iter in 2:2000) {
   arena <- dolife(num, arena, dostep2)
-  canvasN(101)
-  plotstep(num,arena,cex=1.0,sleep=0.04)
+  prevstep <- plotstep(arena,prevstep,cex=1.0,sleep=0.2)
   xc <- sum(arena)
   count[iter] <- xc
   if (xc == 0) break
@@ -256,7 +252,6 @@ for (iter in 2:2000) {
     if (all(count[(iter-4):iter] == count[iter])) break
   }
 } 
-cat(seed,iter,gettime() - begin,"\n")
 
 plotcount(count)
 
@@ -269,7 +264,7 @@ extract <- function(frame,left,top,size) {
   return(ans)
 }
 
-out <- extract(arena,50,58,5)
+out <- extract(arena,40,60,20)
 nout <- nrow(out)
 canvasN(7)
 plotstep(nout,out,cex=5.0,sleep=0.2)
@@ -354,9 +349,53 @@ print(seed)
 print(seed)
 
 
+# New dostep --------------------------------------------------------
+
+dostep3 <- function(xj,yi,frame) {
+  ans <- 0  # assume answer is the cell dies
+  view <- sum(frame[(xj-2):(xj+2),(yi+1):(yi-1)]) - frame[xj,yi]
+#  cat(view,"   ")
+  if (view > 0) {
+    if (((frame[xj,yi] == 1) & (view == 5)) |
+        ((frame[xj,yi] == 0) & ((view == 2) | (view == 3)))) ans <- 1
+  }
+  return(ans)
+}
+
+
+tmp <- random(12)
+num <- 101
+arena <- matrix(0,nrow=num,ncol=num)
+arena <- placematrix(arena,tmp)
+canvasN(101)
+plotstep(arena,cex=1.0)
+
+step <- arena
+nm1 <- num - 2
+for (i in nm1:3) { # y axis
+  for (j in 3:nm1) { # x axis
+    step[j,i] <-sum(arena[(i-2):(i+2),(j+1):(j-1)]) - arena[i,j]
+  }
+}
+table(step)
+
+N <- 100
+
+for (iter in 1:N) { # iter=1
+  arena <- dolife(100, arena, dostep)
+  plotstep(arena,cex=1.0,sleep=1)
+  if (iter < N) plotstep(arena,col="white",sleep=0.001)
+} 
+
+
+
+
+
+
 # Colour Field ------------------------------------------------------ 
 
-library(rutilsMH)
+library(codeutils)
+library(hplot)
 library(diagrams)
 
 #plotprep(height=5)
@@ -437,16 +476,16 @@ makearena <- function(N=100) {
 
   set.seed(56173) # pick any random seed
   num <- 100
-  arena <- canvasN(num)
+  plotprep(height=10,width=10)
+  arena1 <- canvas()
   mat <- symmetric(5)
-  arena <- placematrix(arena,mat)
-  plotstep(arena,cex=1.0)
+  arena <- placematrix(arena1,mat)
+  prevstep <- plotstep(arena,arena1,cex=1.0)
   iter <- 200
   count <- numeric(iter)
   for (i in 1:iter) {
     arena <- dolife(num, arena, dostep)
-    canvasN(num)
-    plotstep(arena,cex=1.0,sleep=0.05)
+    prevstep <- plotstep(arena,prevstep,cex=1.0,sleep=0.2)
     count[i] <- sum(arena)
   }
 

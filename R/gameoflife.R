@@ -25,9 +25,10 @@ canvasN <- function(N=100,pts=TRUE) {
   plot(seq(0,(N+1),length=102),seq(0,(N+1),length=102),
        type="n",xaxt="n",yaxt="n",xlab="",ylab="", bty="n")
   arena <- matrix(0,nrow=N,ncol=N,dimnames=list(1:N,1:N))
-  makerect(1,N,N,(N))
-  if (pts) for (i in 1:100) points(c(2:101),rep(i,100),pch=16,
-                                   cex=0.2,col="grey")
+  if (pts) {
+    for (i in 1:100) points(c(2:101),rep(i,100),pch=16,cex=0.2,col="grey")
+    makerect(1,N,N,(N))
+  }
   return(invisible(arena))
 }
 
@@ -127,7 +128,7 @@ dostep2 <- function(xj,yi,frame) {
 #'
 #' @param N the size of the arena
 #' @param frame the arena matrix
-#' @param infun the function definning the automatic rules default
+#' @param infun the function defining the automatic rules default
 #'     = dostep
 #'
 #' @return returns a revised copy of the arena
@@ -378,12 +379,15 @@ plotcount <- function(cnt) {
 #'     work within RStudio's plot window
 #'
 #' @param frame the arena at a given time step or generation
+#' @param prevframe the arena in the previous timestep. If is.null
+#'     then nothing will happen, otherwise this is printed first 
+#'     to overwrite the previous points in white.
 #' @param col the colour of the points, default=1=black
 #' @param cex the size of the points, default=1.0
 #' @param sleep the interval left to enable the canvas to update and 
 #'     remain visible
 #'
-#' @return nothing but it does plot the arena for a given generation
+#' @return the input frame to be placed into the following prevframe
 #' @export
 #'
 #' @examples
@@ -392,25 +396,33 @@ plotcount <- function(cnt) {
 #'   arena <- canvasN(num)
 #'   mat <- pentadec()
 #'   arena <- placematrix(arena,mat)
-#'   plotstep(num,arena,cex=1.0)
+#'   prevstep <- plotstep(num,arena,prevframe=NULL,cex=1.0)
 #'   iter <- 100
 #'   count <- numeric(iter)
 #'   for (i in 1:iter) {
 #'     arena <- dolife(num, arena, dostep)
-#'     canvasN(num)
-#'     plotstep(num,arena,cex=1.0,sleep=0.05)
+#'     prevstep <- plotstep(num,arena,prevstep,cex=1.0,sleep=0.05)
 #'     count[i] <- sum(arena)
 #'   }
 #' }
-plotstep <- function(frame,col=1,cex=1.0,sleep=0.2) {
+plotstep <- function(frame,prevframe,col=1,cex=1.0,sleep=0.2) {
   N <- nrow(frame)
-  for (i in N:1) {
-    xs <- which(frame[i,] > 0)
-    npts <- length(xs)
-    if (npts > 0) points(rep(i,npts),xs,pch=16,
-                         cex=cex,col=col)
+  if (!is.null(prevframe)) {  
+    for (i in N:1) {
+      xs <- which(prevframe[i,] > 0)
+      npts <- length(xs)
+      if (npts > 0) points(rep(i,npts),xs,pch=16,
+                           cex=cex,col="white")
+    } 
+  }
+  for (i in N:1) {  
+    xs2 <- which(frame[i,] > 0)
+    npts2 <- length(xs2)
+    if (npts2 > 0) points(rep(i,npts2),xs2,pch=16,
+                         cex=cex,col=col)    
   }
   Sys.sleep(sleep)
+  return(invisible((frame)))
 } # end of plotstep
 
 
@@ -508,9 +520,8 @@ mixuprand <- function(seed) {
 #' 
 #'  plotcount(count)
 #' }
-symmetric <- function() {
+symmetric <- function(N=5) {
   # develops for about 170 steps until stability
-  N <- 5
   x <- matrix(0,nrow=N,ncol=N)
   x[c(1,2,4,5),c(4,4,4,4)] <- 1
   x[c(1,5),c(3,3)] <- 1
