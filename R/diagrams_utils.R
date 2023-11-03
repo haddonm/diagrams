@@ -23,9 +23,12 @@ canvas <- function(xstart=0,xfinish=100,ystart=0,yfinish=100) {
   par(cex=0.85, mgp=c(1.35,0.35,0), font.axis=7,font=7,font.lab=7)
   plot(seq(xstart,xfinish,length=101),seq(ystart,yfinish,length=101),
        type="n",xaxt="n",yaxt="n",xlab="",ylab="", bty="n")
+<<<<<<< HEAD
   N <- xfinish - xstart
   arena <- matrix(0,nrow=N,ncol=N,dimnames=list(1:N,1:N))
   return(arena)
+=======
+>>>>>>> 0150f939f8d71d69c5a5be3cf9349f93481c99eb
 } # end of canvas
 
 #' @title circle draws a circle with a given origin and radius
